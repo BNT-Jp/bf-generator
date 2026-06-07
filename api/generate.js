@@ -2,7 +2,7 @@ import OpenAI from "openai";
 
 export default async function handler(req, res) {
   const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: process.env.OPENAI_API_KEY,
   });
 
   const prompt = `
@@ -123,12 +123,19 @@ Page4:
 生成結果内にcurrent_area,current_residence,living_area,work_area,work_location,relocation_history,transfer_history,activity_areaが存在した場合は削除してから出力すること。出力許可地理情報はbirthplaceとregional_valuesのみ。
 `;
 
-  const response = await openai.responses.create({
-    model: "gpt-4.1",
-    input: prompt
-  });
+  try {
+    const response = await openai.responses.create({
+      model: "gpt-4.1",
+      input: prompt,
+    });
 
-  res.status(200).json({
-    text: response.output_text
-  });
+    res.status(200).json({
+      text: response.output[0].content[0].text
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
 }
