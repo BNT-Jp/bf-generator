@@ -1,22 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>BF Generator</title>
-</head>
-<body>
-  <h1>彼氏生成テスト</h1>
-  <button onclick="generate()">生成する</button>
+<button onclick="generate()">生成</button>
+<p id="result"></p>
 
-  <pre id="result"></pre>
+<script>
+async function generate() {
+  const res = await fetch("/api/generate", {
+    method: "POST"
+  });
 
-  <script>
-    async function generate() {
-      const res = await fetch('/api/generate');
-      const data = await res.json();
-      document.getElementById('result').textContent =
-        JSON.stringify(data, null, 2);
-    }
-  </script>
-</body>
-</html>
+  const data = await res.json();
+  document.getElementById("result").innerText = data.text;
+}
+</script>
