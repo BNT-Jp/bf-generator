@@ -1,13 +1,30 @@
-<button onclick="generate()">生成</button>
-<p id="result"></p>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BF Generator</title>
+</head>
+<body>
+  <h1>彼氏生成テスト</h1>
 
-<script>
-async function generate() {
-  const res = await fetch("/api/generate", {
-    method: "POST"
-  });
+  <button onclick="generate()">生成</button>
 
-  const data = await res.json();
-  document.getElementById("result").innerText = data.text;
-}
-</script>
+  <p id="result">ここに結果が出る</p>
+
+  <script>
+    async function generate() {
+      try {
+        const res = await fetch("/api/generate", {
+          method: "POST"
+        });
+
+        const data = await res.json();
+
+        document.getElementById("result").innerText = data.text;
+      } catch (e) {
+        document.getElementById("result").innerText = "エラー：" + e.message;
+      }
+    }
+  </script>
+</body>
+</html>
