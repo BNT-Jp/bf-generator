@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>BF Generator</title>
+  <title>彼氏生成テスト</title>
 </head>
 <body>
+
   <h1>彼氏生成テスト</h1>
 
   <button onclick="generate()">生成</button>
 
-  <p id="result">ここに結果が出る</p>
+  <p id="result"></p>
 
   <script>
     async function generate() {
+      const resultEl = document.getElementById("result");
+      resultEl.innerText = "生成中...";
+
       try {
         const res = await fetch("/api/generate", {
           method: "POST"
@@ -20,11 +24,20 @@
 
         const data = await res.json();
 
-        document.getElementById("result").innerText = data.text;
+        // APIエラー表示
+        if (data.error) {
+          resultEl.innerText = "エラー: " + data.detail;
+          return;
+        }
+
+        // 正常表示
+        resultEl.innerText = data.text;
+
       } catch (e) {
-        document.getElementById("result").innerText = "エラー：" + e.message;
+        resultEl.innerText = "通信エラー: " + e.message;
       }
     }
   </script>
+
 </body>
 </html>
